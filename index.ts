@@ -1,7 +1,7 @@
 import { getChatCompletions } from "./getChatCompletions";
 
 let language = "javascript";
-let topic = "async functions";
+let topic = "calculate time and hours based on given iso";
 let question = {
   question:
     "Create a JavaScript function named 'fetchData' that takes a URL as a parameter and returns a promise that resolves with the data fetched from the given URL as a JSON object. Use async/await syntax for the function.",
@@ -61,7 +61,8 @@ const evaluatorPrompt = [
      suggestions:string[],marks:number,feedback:string} `,
   },
 ];
-
- let responseMessage = await getChatCompletions(generateQuestionPrompt);
+console.time("timeTaken");
+let responseMessage = await getChatCompletions(generateQuestionPrompt);
 // let responseMessage = await getChatCompletions(evaluatorPrompt);
 console.log(responseMessage);
+console.timeEnd("timeTaken");
