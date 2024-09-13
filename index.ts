@@ -69,7 +69,7 @@ const generateQuestionPrompt = [
   },
   {
     role: "user",
-    content: `generate scenario with example based question which is descriptive that should be based on ${language} and the topic is ${topic} give them a sample input should be relative to the question and output and 3 test cases for the question you generate.Dont give any code snippets, ask them to write their own code, give the response in json format {question:string,input:string,output:string,testcases:string[input:string,output:string],condition:string,levels:string[]} `,
+    content: `generate scenario with example based question which is descriptive that should be based on ${language} and the topic is ${topic} give them a sample input should be relative to the question and output and 3 test cases for the question you generate.Dont give any code snippets with logic but give snippet to basically receive the input according to the question, ask them to write their own code, give the response in json format {question:string,input:string,output:string,testcases:string[input:string,output:string],condition:string,levels:string[],starterCode:string} `,
   },
 ];
 const generateSolutionPrompt = [
@@ -109,8 +109,8 @@ const evaluatorPrompt = [
 ];
 
 console.time("timeTaken");
-// let responseMessage = await getChatCompletions(generateQuestionPrompt);
-let responseMessage = await getChatCompletions(evaluatorPrompt);
+let responseMessage = await getChatCompletions(generateQuestionPrompt);
+// let responseMessage = await getChatCompletions(evaluatorPrompt);
 // let responseMessage = await getChatCompletions(generateSolutionPrompt);
 console.log(responseMessage);
 console.timeEnd("timeTaken");
