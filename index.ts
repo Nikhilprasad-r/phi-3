@@ -62,6 +62,6 @@ const evaluatorPrompt = [
   },
 ];
 
-// let responseMessage = await getChatCompletions(generateQuestionPrompt);
-let responseMessage = await getChatCompletions(evaluatorPrompt);
+ let responseMessage = await getChatCompletions(generateQuestionPrompt);
+// let responseMessage = await getChatCompletions(evaluatorPrompt);
 console.log(responseMessage);
