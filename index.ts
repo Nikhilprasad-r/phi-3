@@ -3,27 +3,64 @@ import { getChatCompletions } from "./getChatCompletions";
 let language = "javascript";
 let topic = "distance and speed";
 let question = {
-  "question": "You are tasked with creating a JavaScript function that calculates the number of hours and minutes elapsed between two ISO 8601 timestamps. The function should return the difference in hours and minutes in a formatted string. Write a JavaScript function that takes two ISO 8601 timestamps as inputs and returns the difference between these timestamps in hours and minutes. Provide a sample input and output, and also provide three test cases with their respective inputs and expected outputs.",
-  "input": "Write a JavaScript function `calculateTimeDifference` that takes two ISO 8601 timestamps as arguments and returns a string in the format 'HH hours MM minutes'.",
-  "output": "For example, if the input timestamps are '2023-04-01T12:00:00Z' and '2023-04-01T15:30:00Z', the output should be '3 hours 30 minutes'.",
-  "testcases": [
+  question:
+    "Imagine you have a list of objects containing the speed and time taken by different vehicles to travel a certain distance. The goal is to write a JavaScript function that calculates the distance covered by each vehicle. The speed is given in kilometers per hour (km/h) and the time is given in hours. The function should return an array of distances for each vehicle.",
+  input:
+    "const vehicles = [{name: 'Car', speed: 60, time: 2}, {name: 'Bike', speed: 15, time: 1.5}, {name: 'Train', speed: 90, time: 3}, {name: 'Airplane', speed: 800, time: 0.5}],",
+  output:
+    "The distances covered by the Car, Bike, Train, and Airplane would be 120 km, 22.5 km, 270 km, and 400 km respectively.",
+  testcases: [
     {
-      "input": "'2023-04-02T08:00:00Z', '2023-04-02T11:15:00Z'",
-      "output": "3 hours 15 minutes"
+      input:
+        "const vehicles = [{name: 'Car', speed: 60, time: 2}, {name: 'Bike', speed: 15, time: 1.5}, {name: 'Train', speed: 90, time: 3}, {name: 'Airplane', speed: 800, time: 0.5}],",
+      output:
+        "The distances covered by the Car, Bike, Train, and Airplane would be 120 km, 22.5 km, 270 km, and 400 km respectively.",
     },
     {
-      "input": "'2023-04-03T18:45:00Z', '2023-04-03T11:00:00Z'",
-      "output": "7 hours 15 minutes"
+      input:
+        "const vehicles = [{name: 'Car', speed: 0, time: 2}, {name: 'Bike', speed: 0, time: 1}, {name: 'Train', speed: 0, time: 0}, {name: 'Airplane', speed: 0, time: 0}],",
+      output:
+        "All vehicles did not move, so the distances covered by the Car, Bike, Train, and Airplane would be 0 km.",
     },
     {
-      "input": "'2023-04-04T00:00:00Z', '2023-04-04T23:59:59Z'",
-      "output": "23 hours 59 minutes"
-    }
+      input:
+        "const vehicles = [{name: 'Car', speed: 100, time: 0}, {name: 'Bike', speed: 20, time: 0}, {name: 'Train', speed: 100, time: 0}, {name: 'Airplane', speed: 1000, time: 0}],",
+      output:
+        "All vehicles did not move, so the distances covered by the Car, Bike, Train, and Airplane would be 0 km.",
+    },
   ],
-  "condition": "The function must handle edge cases such as daylight saving time changes and leap seconds.",
-  "levels": ["Intermediate"]
+  condition:
+    "The function should correctly calculate the distance for each vehicle using the formula: distance = speed * time. It should handle cases where speed or time is zero.",
+  levels: ["Beginner", "Intermediate"],
 };
-let solution = 'console.log("json")';
+const solution = `function calculateDistances(vehicles) {
+  // Array to hold the distances
+  let distances = [];
+
+  // Loop through each vehicle object in the array
+  for (let i = 0; i < vehicles.length; i++) {
+    // Calculate the distance using the formula distance = speed * time
+    let distance = vehicles[i].speed * vehicles[i].time;
+
+    // Add the distance to the distances array
+    distances.push(distance);
+  }
+
+  // Return the distances array
+  return distances;
+}
+
+// Example usage:
+let vehicles = [
+  { speed: 60, time: 2 },
+  { speed: 80, time: 1.5 },
+  { speed: 100, time: 1 }
+];
+
+let distances = calculateDistances(vehicles);
+console.log(distances); // [120, 120, 100]
+`;
+
 
 const generateQuestionPrompt = [
   {
@@ -35,21 +72,45 @@ const generateQuestionPrompt = [
     content: `generate scenario with example based question which is descriptive that should be based on ${language} and the topic is ${topic} give them a sample input should be relative to the question and output and 3 test cases for the question you generate.Dont give any code snippets, ask them to write their own code, give the response in json format {question:string,input:string,output:string,testcases:string[input:string,output:string],condition:string,levels:string[]} `,
   },
 ];
-
+const generateSolutionPrompt = [
+  {
+    role: "system",
+    content: `Your a programming expert generate a solution for this question based on given programming language and topic`,
+  },
+  {
+    role: "user",
+    content: `generate code based on ${language} and the topic is ${topic} and question is ${question.question}`,
+  },
+];
 const evaluatorPrompt = [
   {
     role: "system",
     content:
-      "You are a good computer programing mentor. Who can asses the students with their pr. Check the program given by the student and provide feedback to the student.",
+      "You are a good computer programming mentor. Check the program given by the student and provide feedback to the student.",
   },
   {
     role: "user",
-    content: `${question} was the question given to the student to solve in ${language} programming language on ${topic} and this ${solution} was the solution given by the student based on the question strictly evaluate how good the solution is give the feedback should be line by line explanation of the solution with three improvements that can be done if not any, give score out of 10 points based on syntax-2 point,logic-3 point,logic releated to question-3 points,utilizing optimization techniques -2 points, respond in json format {
-     suggestions:string[],marks:number,feedback:string} `,
+    content: `The question given to the student to solve in ${language} programming language on ${topic} is: 
+    "${question.question}" with the following solution: 
+    \`\`\`${solution}\`\`\`
+    Strictly evaluate how good the solution is. Provide line-by-line feedback with three possible improvements (if any).
+    Grade the solution on a scale of 10 points: 
+    - Syntax (2 points), 
+    - Logic (3 points),
+    - Relevance to the question (3 points), 
+    - Optimization techniques (2 points). 
+    Respond in JSON format with the following structure strictly dont give code snippet: 
+    {
+      suggestions: string[], 
+      marks: number, 
+      feedback: string
+    }`,
   },
 ];
+
 console.time("timeTaken");
-let responseMessage = await getChatCompletions(generateQuestionPrompt);
-// let responseMessage = await getChatCompletions(evaluatorPrompt);
+// let responseMessage = await getChatCompletions(generateQuestionPrompt);
+let responseMessage = await getChatCompletions(evaluatorPrompt);
+// let responseMessage = await getChatCompletions(generateSolutionPrompt);
 console.log(responseMessage);
 console.timeEnd("timeTaken");
