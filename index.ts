@@ -1,40 +1,27 @@
 import { getChatCompletions } from "./getChatCompletions";
 
 let language = "javascript";
-let topic = "calculate time and hours based on given iso";
+let topic = "distance and speed";
 let question = {
-  question:
-    "Create a JavaScript function named 'fetchData' that takes a URL as a parameter and returns a promise that resolves with the data fetched from the given URL as a JSON object. Use async/await syntax for the function.",
-
-  input: "url = 'https://jsonplaceholder.typicode.com/todos'",
-
-  output:
-    "Promise resolved with JSON object containing the data fetched from the URL",
-
-  testcases: [
+  "question": "You are tasked with creating a JavaScript function that calculates the number of hours and minutes elapsed between two ISO 8601 timestamps. The function should return the difference in hours and minutes in a formatted string. Write a JavaScript function that takes two ISO 8601 timestamps as inputs and returns the difference between these timestamps in hours and minutes. Provide a sample input and output, and also provide three test cases with their respective inputs and expected outputs.",
+  "input": "Write a JavaScript function `calculateTimeDifference` that takes two ISO 8601 timestamps as arguments and returns a string in the format 'HH hours MM minutes'.",
+  "output": "For example, if the input timestamps are '2023-04-01T12:00:00Z' and '2023-04-01T15:30:00Z', the output should be '3 hours 30 minutes'.",
+  "testcases": [
     {
-      input: "url = 'https://jsonplaceholder.typicode.com/todos'",
-
-      output: "Promise resolved with JSON object containing the todos data",
+      "input": "'2023-04-02T08:00:00Z', '2023-04-02T11:15:00Z'",
+      "output": "3 hours 15 minutes"
     },
-
     {
-      input: "url = 'https://jsonplaceholder.typicode.com/posts'",
-
-      output: "Promise resolved with JSON object containing the posts data",
+      "input": "'2023-04-03T18:45:00Z', '2023-04-03T11:00:00Z'",
+      "output": "7 hours 15 minutes"
     },
-
     {
-      input: "url = 'https://jsonplaceholder.typicode.com/comments'",
-
-      output: "Promise resolved with JSON object containing the comments data",
-    },
+      "input": "'2023-04-04T00:00:00Z', '2023-04-04T23:59:59Z'",
+      "output": "23 hours 59 minutes"
+    }
   ],
-
-  condition:
-    "The function should handle errors by rejecting the promise if the fetch operation fails",
-
-  levels: ["beginner"],
+  "condition": "The function must handle edge cases such as daylight saving time changes and leap seconds.",
+  "levels": ["Intermediate"]
 };
 let solution = 'console.log("json")';
 
@@ -45,7 +32,7 @@ const generateQuestionPrompt = [
   },
   {
     role: "user",
-    content: `generate scenario based question that should be based on ${language} and the topic is ${topic} give them a sample input and output and 3 test cases for the question you generate.Dont give any code snippets, ask them to write their own code, give the response in json format {question:string,input:string,output:string,testcases:string[input:string,output:string],condition:string,levels:string[]} `,
+    content: `generate scenario with example based question which is descriptive that should be based on ${language} and the topic is ${topic} give them a sample input should be relative to the question and output and 3 test cases for the question you generate.Dont give any code snippets, ask them to write their own code, give the response in json format {question:string,input:string,output:string,testcases:string[input:string,output:string],condition:string,levels:string[]} `,
   },
 ];
 
