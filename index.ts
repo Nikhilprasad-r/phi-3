@@ -1,10 +1,12 @@
 import { evaluateSolution } from "./evaluateSolution";
 import { generateQuestion } from "./generateQuestion";
 import { generateSolution } from "./generateSolution";
+import { generateTopics } from "./generateTopics";
 import { getChatCompletions } from "./getChatCompletions";
 
 let language = "javascript";
 let topic = "distance and speed";
+let experience = 7;
 let question = {
   question:
     "Imagine you have a list of objects containing the speed and time taken by different vehicles to travel a certain distance. The goal is to write a JavaScript function that calculates the distance covered by each vehicle. The speed is given in kilometers per hour (km/h) and the time is given in hours. The function should return an array of distances for each vehicle.",
@@ -39,20 +41,14 @@ let question = {
 const solution = `function calculateDistances(vehicles) {
   // Array to hold the distances
   let distances = [];
-
   // Loop through each vehicle object in the array
   for (let i = 0; i < vehicles.length; i++) {
     // Calculate the distance using the formula distance = speed * time
     let distance = vehicles[i].speed * vehicles[i].time;
-
     // Add the distance to the distances array
-    distances.push(distance);
-  }
-
-  // Return the distances array
-  return distances;
-}
-
+    distances.push(distance);}
+// Return the distances array
+  return distances;}
 // Example usage:
 let vehicles = [
   { speed: 60, time: 2 },
@@ -63,9 +59,10 @@ let vehicles = [
 let distances = calculateDistances(vehicles);
 console.log(distances); // [120, 120, 100]
 `;
+console.time("TimeTaken");
 
-const generatedQuestion = await generateQuestion(language, topic);
-console.log(generatedQuestion);
+// const generatedQuestion = await generateQuestion(language, topic);
+// console.log(generatedQuestion);
 
 // Generate a solution based on the question
 // const generatedSolution = await generateSolution(language, topic, question.question);
@@ -75,5 +72,9 @@ console.log(generatedQuestion);
 // const evaluation = await evaluateSolution(language, topic, question.question, solution);
 // console.log(evaluation);
 
-console.time("timeTaken");
-console.timeEnd("timeTaken");
+
+const generateTopicsRes= await generateTopics(language, experience);
+console.log(generateTopicsRes);
+
+
+console.timeEnd("TimeTaken");
