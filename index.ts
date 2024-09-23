@@ -1,8 +1,8 @@
-import { evaluateSolution } from "./evaluateSolution";
-import { generateQuestion } from "./generateQuestion";
-import { generateSolution } from "./generateSolution";
-import { generateTopics } from "./generateTopics";
-import { getChatCompletions } from "./getChatCompletions";
+import { evaluateSolution } from "./functions/evaluateSolution";
+import { generateQuestion } from "./functions/generateQuestion";
+import { generateSolution } from "./functions/generateSolution";
+import { generateTopics } from "./functions/generateTopics";
+import { getChatCompletions } from "./Ai/getChatCompletions";
 
 let language = "javascript";
 let topic = "distance and speed";

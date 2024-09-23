@@ -1,6 +1,6 @@
-import { getChatCompletions } from "./getChatCompletions";
-import { extractJsonData } from "./lib/extractJsonData";
-import { TopicsSchema } from "./lib/topicsSchema";
+import { getChatCompletions } from "../Ai/getChatCompletions";
+import { extractJsonData } from "../lib/extractJsonData";
+import { TopicsSchema } from "../lib/topicsSchema";
 
 export async function generateTopics(language: string, years: number) {
   const promptContent = `You are tasked with generating 3 interview topics to test coding skills for a software development role. The candidate has ${years} years of experience in ${language}. 

@@ -1,4 +1,4 @@
-import { getChatCompletions } from "./getChatCompletions";
+import { getChatCompletions } from "../Ai/getChatCompletions";
 
 export async function generateSolution(language:string, topic:string, question:string) {
   const generateSolutionPrompt = [

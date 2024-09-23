@@ -1,5 +1,5 @@
-import { getChatCompletions } from "./getChatCompletions";
-import { extractJsonData } from "./lib/extractJsonData";
+import { getChatCompletions } from "../Ai/getChatCompletions";
+import { extractJsonData } from "../lib/extractJsonData";
 
 export async function generateQuestion(language: string, topic: string) {
   const generateQuestionPrompt = [
