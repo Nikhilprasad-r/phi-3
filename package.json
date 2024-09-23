@@ -11,10 +11,11 @@
   "dependencies": {
     "@azure-rest/ai-inference": "^1.0.0-beta.2",
     "@azure/core-auth": "^1.7.2",
-    "monaco-editor": "^0.51.0"
+    "monaco-editor": "^0.51.0",
+    "zod": "^3.23.8"
   },
   "scripts": {
-    "dev": "bun run index.ts",      
-    "build": "bun build index.ts"   
+    "dev": "bun run index.ts",
+    "build": "bun build index.ts"
   }
 }

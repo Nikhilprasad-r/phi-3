@@ -6,7 +6,7 @@ import { getChatCompletions } from "./getChatCompletions";
 
 let language = "javascript";
 let topic = "distance and speed";
-let experience = 7;
+let experience = 3;
 let question = {
   question:
     "Imagine you have a list of objects containing the speed and time taken by different vehicles to travel a certain distance. The goal is to write a JavaScript function that calculates the distance covered by each vehicle. The speed is given in kilometers per hour (km/h) and the time is given in hours. The function should return an array of distances for each vehicle.",

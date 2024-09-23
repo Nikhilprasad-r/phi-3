@@ -1,7 +1,9 @@
 export function extractJsonData(response: string) {
   let extractedData = {};
-  const jsonMatch = response.match(/{\s*"data"\s*:\s*\{[^}]*\}\s*}/s);
   
+  // Updated regex to capture nested JSON structure correctly
+  const jsonMatch = response.match(/{\s*"data"\s*:\s*\{[\s\S]*\}\s*\}/);
+
   if (jsonMatch) {
     try {
       // Extract the matched JSON string
