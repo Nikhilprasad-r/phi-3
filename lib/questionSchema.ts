@@ -1,20 +1,20 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Define the schema for a single test case
 const TestCaseSchema = z.object({
-  input: z.string(),
-  output: z.string(),
+  input: z.string().describe("Input for the test case"),
+  output: z.string().describe("Output for the test case"),
 });
 
 // Define the schema for the response data
-const questionSchema = z.object({
-  question: z.string(),
-  input: z.string(),
-  output: z.string(),
-  testcases: z.array(TestCaseSchema),
-  condition: z.string(),
-  levels: z.array(z.string()),
-  starterCode: z.string(),
+export const questionSchema = z.object({
+  question: z.string().describe("Question for the interview"),
+  input: z.string().describe("Input for the question"),
+  output: z.string().describe("Output for the question"),
+  testcases: z.array(TestCaseSchema).describe("Test cases for the question"),
+  condition: z.string().describe("Condition for the question"),
+  levels: z.array(z.string()).describe("Levels for the question"),
+  starterCode: z.string().describe("Starter code for the question"),
 });
 
 // Type for the validated response
