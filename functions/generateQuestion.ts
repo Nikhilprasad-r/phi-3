@@ -1,43 +1,66 @@
-import { getChatCompletions } from "../Ai/getChatCompletions";
-import { extractJsonData } from "../lib/extractJsonData";
+import { JsonOutputParser } from "@langchain/core/output_parsers";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { ChatOpenAI } from "@langchain/openai";
 
+// Define your desired data structure using TypeScript interfaces for typing
+interface QuestionData {
+  question: string;
+  input: string;
+  output: string;
+  testcases: Array<{
+    input: string;
+    output: string;
+  }>;
+  condition: string;
+  levels: string[];
+  starterCode: string;
+}
+
+// Initialize ChatOpenAi model
+const model = new ChatOpenAI({
+  model: "gpt-3.5-turbo",
+  temperature: 0,
+  openAIApiKey:process.env.OPEN_AI_KEY
+});
+
+// Function to generate a programming question
 export async function generateQuestion(language: string, topic: string) {
-  const generateQuestionPrompt = [
-    {
-      role: "system",
-      content: `You are a programming expert, generate a scenario-based question that helps evaluate the candidate.`,
-    },
-    {
-      role: "user",
-      content: `Generate a descriptive scenario-based programming question that focuses on the language ${language} and the topic ${topic}. The scenario should be practical and relevant to real-world applications, incorporating complexity in a way that can be handled at different levels of difficulty (beginner, intermediate, advanced). The question should be detailed enough to provide a clear problem statement, including:
-      - **Question Statement**: Explain the problem, setting, and the expected outcome clearly. Ensure that the problem is related to ${topic} and showcases features specific to ${language}.
-      - **Sample Input/Output**: Provide a sample input that reflects the type of data the question will be handling. The sample output should correspond to this input, showing the expected result after the problem is solved. Keep the input/output format clear and consistent with the question.
-      - **Test Cases**: Include three test cases (input/output pairs) that align with the question. The test cases should represent different scenarios:
-        - One simple test case for basic functionality.
-        - One intermediate test case for slightly more complex scenarios.
-        - One edge case or complex test case to challenge advanced problem-solving skills.
-      - **Conditions**: Specify any important conditions or constraints (e.g., input size, special rules) that need to be considered when solving the problem.
-      - **Difficulty Levels**: Clearly indicate the range of difficulty levels (beginner, intermediate, advanced) that the problem can cater to, based on the complexity of the solution.
-      - **Starter Code**: Provide a small code snippet to handle receiving input and setting up the problem, but do not include any solution logic. The starter code should be language-appropriate and focus on the input structure and preparation. Encourage users to implement their own logic based on the scenario.
-  
-      Return only a JSON object formatted exactly like this (on a single line with no line breaks or extra text):
-      {"data":{"question":"string","input":"string","output":"string","testcases":[{"input":"string","output":"string"},{"input":"string","output":"string"},{"input":"string","output":"string"}],"condition":"string","levels":["string"],"starterCode":"string"}}. Make sure the JSON is the last part of your response and doesnt have formatting error.`,
-    },
-  ];
-  
-  
-  try {
-    // Call getChatCompletions and wait for the response
-    const assistantMessage = await getChatCompletions(generateQuestionPrompt);
-console.log(assistantMessage)
-    // Use the helper function to extract JSON data
-    const extractedData = assistantMessage
-      ? extractJsonData(assistantMessage)
-      : { data: "" };
+  // Query to generate a programming question
+  const generateQuestionQuery = `Generate a descriptive scenario-based programming question that focuses on the language ${language} and the topic ${topic}. The scenario should be practical and relevant to real-world applications, incorporating complexity in a way that can be handled at different levels of difficulty (beginner, intermediate, advanced). Provide a JSON object as output containing the following fields:
+  - 'question': A string containing the question statement.
+  - 'input': A string representing the sample input.
+  - 'output': A string representing the expected output.
+  - 'testcases': An array of 3 test cases with 'input' and 'output' fields.
+  - 'condition': A string specifying important conditions or constraints.
+  - 'levels': An array containing difficulty levels.
+  - 'starterCode': A string containing starter code that sets up the problem, without the solution logic.`;
 
-    return extractedData;
+  // JSON format instructions for the response
+  const formatInstructions = `Respond with a valid JSON object containing the fields 'question', 'input', 'output', 'testcases', 'condition', 'levels', and 'starterCode'.`;
+
+  // Set up the output parser for the expected data structure
+  const parser = new JsonOutputParser<QuestionData>();
+
+  // Create a prompt template
+  const prompt = ChatPromptTemplate.fromTemplate(
+    "Answer the user query.\n{format_instructions}\n{query}\n"
+  );
+
+  // Inject the query and formatting instructions into the prompt template
+  const partialedPrompt = await prompt.partial({
+    format_instructions: formatInstructions,
+  });
+
+  // Chain the prompt with the model and parser
+  const chain = partialedPrompt.pipe(model).pipe(parser);
+
+  try {
+    // Invoke the chain and generate the question
+    const response = await chain.invoke({ query: generateQuestionQuery });
+
+    return response;
   } catch (error) {
-    console.error("Error generating topics:", error);
-    return {};
+    console.error("Error generating question:", error);
+    return { error: "An error occurred while generating the question" };
   }
 }
